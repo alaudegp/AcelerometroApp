@@ -46,12 +46,4 @@
         android:text="Meus sensores"
         android:onClick="btMeusSensoresOnClick"/>
 
-    <Button
-        android:id="@+id/levarDados"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:text="Levar Dados"
-        />
-
 </LinearLayout>
