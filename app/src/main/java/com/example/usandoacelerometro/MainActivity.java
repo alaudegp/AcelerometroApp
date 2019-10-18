@@ -5,12 +5,17 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
+
+import static java.lang.Math.abs;
 
 public class MainActivity extends AppCompatActivity implements
         SensorEventListener {
@@ -18,6 +23,12 @@ public class MainActivity extends AppCompatActivity implements
     private TextView tvValorX;
     private TextView tvValorY;
     private TextView tvValorZ;
+
+    private Button btnTimer;
+
+    float[] vetorValores = new float[];
+
+    float dadoX, dadoY, dadoZ;
 
     private static final int X = 0;
     private static final int Y = 1;
@@ -33,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        btnTimer = (Button) findViewById(R.id.id_btnTimer);
 
         tvValorX = (TextView) findViewById(R.id.tvValorX);
         tvValorY = (TextView) findViewById(R.id.tvValorY);
@@ -71,9 +84,18 @@ public class MainActivity extends AppCompatActivity implements
         mLinearAcceleration[Y] = event.values[Y] - mGravity[Y];
         mLinearAcceleration[Z] = event.values[Z] - mGravity[Z];
 
-        tvValorX.setText(String.valueOf(mLinearAcceleration[X]));
-        tvValorY.setText(String.valueOf(mLinearAcceleration[Y]));
-        tvValorZ.setText(String.valueOf(mLinearAcceleration[Z]));
+        dadoX = abs(mLinearAcceleration[X]);
+        dadoY = abs(mLinearAcceleration[Y]);
+        dadoZ = abs(mLinearAcceleration[Z]);
+
+        float limite = 40.0f;
+        if (dadoX > limite) {
+            Toast.makeText(getApplicationContext(), "Passou de trinta", Toast.LENGTH_LONG).show();
+        }
+
+        tvValorX.setText(String.valueOf(dadoX));
+        tvValorY.setText(String.valueOf(dadoY));
+        tvValorZ.setText(String.valueOf(dadoZ));
 
     }
 

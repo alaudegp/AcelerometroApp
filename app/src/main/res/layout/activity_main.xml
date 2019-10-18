@@ -46,4 +46,10 @@
         android:text="Meus sensores"
         android:onClick="btMeusSensoresOnClick"/>
 
+    <Button
+        android:id="@+id/id_btnTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="time"/>
+
 </LinearLayout>
