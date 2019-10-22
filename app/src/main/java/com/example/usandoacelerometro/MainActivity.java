@@ -8,11 +8,14 @@ import android.hardware.SensorManager;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
 
 import static java.lang.Math.abs;
@@ -24,9 +27,10 @@ public class MainActivity extends AppCompatActivity implements
     private TextView tvValorY;
     private TextView tvValorZ;
 
-    private Button btnTimer;
+    double vet []= {};
 
-    float[] vetorValores = new float[];
+
+    private Button btnTimer;
 
     float dadoX, dadoY, dadoZ;
 
@@ -39,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private SensorManager mSensorManager;
     private Sensor mAcelerometro;
+
+    Acelerometro acelerometro = new Acelerometro();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +77,10 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+        
+        
+
+        NumberFormat formatarFloat= new DecimalFormat("0.0");
 
         final float alpha = 0.8f;
 
@@ -88,15 +98,22 @@ public class MainActivity extends AppCompatActivity implements
         dadoY = abs(mLinearAcceleration[Y]);
         dadoZ = abs(mLinearAcceleration[Z]);
 
-        float limite = 40.0f;
-        if (dadoX > limite) {
-            Toast.makeText(getApplicationContext(), "Passou de trinta", Toast.LENGTH_LONG).show();
-        }
+        // tirar as casas decimais
+        String eixoXformtat = formatarFloat.format(dadoX);
+        String eixoYformtat = formatarFloat.format(dadoY);
+        String eixoZformtat = formatarFloat.format(dadoZ);
 
-        tvValorX.setText(String.valueOf(dadoX));
-        tvValorY.setText(String.valueOf(dadoY));
-        tvValorZ.setText(String.valueOf(dadoZ));
+        tvValorX.setText(String.valueOf(eixoXformtat));
+        tvValorY.setText(String.valueOf(eixoYformtat));
+        tvValorZ.setText(String.valueOf(eixoZformtat));
 
+        acelerometro.setEixoX(Float.parseFloat(eixoXformtat));
+        acelerometro.setEixoY(Float.parseFloat(eixoYformtat));
+        acelerometro.setEixoZ(Float.parseFloat(eixoZformtat));
+
+        String res = String.valueOf(acelerometro.getEixoX());
+
+        Log.d("mytag", res);
     }
 
     @Override
