@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Math.abs;
@@ -27,8 +28,7 @@ public class MainActivity extends AppCompatActivity implements
     private TextView tvValorY;
     private TextView tvValorZ;
 
-    double vet []= {};
-
+    int[] vet = new int[3];
 
     private Button btnTimer;
 
@@ -51,15 +51,21 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnTimer = (Button) findViewById(R.id.id_btnTimer);
+        btnTimer = findViewById(R.id.id_btnTimer);
 
-        tvValorX = (TextView) findViewById(R.id.tvValorX);
-        tvValorY = (TextView) findViewById(R.id.tvValorY);
-        tvValorZ = (TextView) findViewById(R.id.tvValorZ);
+        tvValorX = findViewById(R.id.tvValorX);
+        tvValorY = findViewById(R.id.tvValorY);
+        tvValorZ = findViewById(R.id.tvValorZ);
 
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mAcelerometro = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
+        int x = 10;
+
+        for (int i = 0; i<vet.length(); i++){
+
+            Toast.makeText(this, "o valor adicionado ao vetor: "+x, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -77,10 +83,8 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        
-        
 
-        NumberFormat formatarFloat= new DecimalFormat("0.0");
+        NumberFormat formatarFloat = new DecimalFormat("0.0");
 
         final float alpha = 0.8f;
 
@@ -94,26 +98,24 @@ public class MainActivity extends AppCompatActivity implements
         mLinearAcceleration[Y] = event.values[Y] - mGravity[Y];
         mLinearAcceleration[Z] = event.values[Z] - mGravity[Z];
 
+        // variáveis para recebr os valores do sensores
         dadoX = abs(mLinearAcceleration[X]);
         dadoY = abs(mLinearAcceleration[Y]);
         dadoZ = abs(mLinearAcceleration[Z]);
 
-        // tirar as casas decimais
-        String eixoXformtat = formatarFloat.format(dadoX);
-        String eixoYformtat = formatarFloat.format(dadoY);
-        String eixoZformtat = formatarFloat.format(dadoZ);
+        acelerometro.setEixoX(dadoX*10);
 
+        // tirar as casas decimais
+        String eixoXformtat = formatarFloat.format(acelerometro.getEixoX());
+        String eixoYformtat = formatarFloat.format(acelerometro.getEixoY());
+        String eixoZformtat = formatarFloat.format(acelerometro.getEixoZ());
+
+        // coloca os valores dos sensores dentro das Text
         tvValorX.setText(String.valueOf(eixoXformtat));
         tvValorY.setText(String.valueOf(eixoYformtat));
         tvValorZ.setText(String.valueOf(eixoZformtat));
 
-        acelerometro.setEixoX(Float.parseFloat(eixoXformtat));
-        acelerometro.setEixoY(Float.parseFloat(eixoYformtat));
-        acelerometro.setEixoZ(Float.parseFloat(eixoZformtat));
 
-        String res = String.valueOf(acelerometro.getEixoX());
-
-        Log.d("mytag", res);
     }
 
     @Override
