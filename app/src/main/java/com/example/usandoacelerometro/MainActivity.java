@@ -1,5 +1,6 @@
 package com.example.usandoacelerometro;
 
+import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -10,7 +11,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +26,10 @@ import static java.lang.Math.abs;
 
 public class MainActivity extends AppCompatActivity implements
         SensorEventListener {
+
+    ListView listView;
+    String lTitle[] = {"Valor 1", "Valor 2", "Valor 3", "valor 4", "valor 5", "Valor 6", "Valor 7", "Valor 8", "Valor 9", "Valor 10"};
+    int lValor[] = {0};
 
     private TextView tvValorX;
     private TextView tvValorY;
@@ -51,8 +58,6 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnTimer = findViewById(R.id.id_btnTimer);
-
         tvValorX = findViewById(R.id.tvValorX);
         tvValorY = findViewById(R.id.tvValorY);
         tvValorZ = findViewById(R.id.tvValorZ);
@@ -60,11 +65,17 @@ public class MainActivity extends AppCompatActivity implements
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mAcelerometro = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        int x = 10;
+        ListView = findViewById(R.id.listaDeValores);
+    }
 
-        for (int i = 0; i<vet.length(); i++){
+    class MyAdapter extends ArrayAdapter<String>{
+        Context context;
+        String linhsTitulo[];
+        int linhaValor[];
 
-            Toast.makeText(this, "o valor adicionado ao vetor: "+x, Toast.LENGTH_SHORT).show();
+        MyAdapter (Context c, String titulo[], int valor[]){
+            super(c, R.layout.linha, R.id.txtTitulo, titulo);
+            this.linhsTitulo
         }
     }
 

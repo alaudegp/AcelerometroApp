@@ -9,47 +9,52 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Valor x:"/>
+        android:text="Valor x:" />
 
     <TextView
         android:id="@+id/tvValorX"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""/>
+        android:text="" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Valor y:"/>
+        android:text="Valor y:" />
 
     <TextView
         android:id="@+id/tvValorY"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Valor Z:"/>
+        android:text="" />
 
     <TextView
         android:id="@+id/tvValorZ"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""/>
+        android:text="Valor Z:" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <ListView
+        android:id="@+id/listaDeValores"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:text="Meus sensores"
-        android:onClick="btMeusSensoresOnClick"/>
+        android:onClick="btMeusSensoresOnClick"
+        android:text="Meus sensores" />
 
     <Button
         android:id="@+id/id_btnTimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="time"/>
+        android:text="time" />
 
 </LinearLayout>
