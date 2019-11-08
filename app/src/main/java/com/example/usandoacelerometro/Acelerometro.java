@@ -1,6 +1,7 @@
 package com.example.usandoacelerometro;
 
 public class Acelerometro {
+
     private float eixoX;
     private float eixoY;
     private float eixoZ;

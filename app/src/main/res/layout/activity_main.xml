@@ -58,18 +58,11 @@
         android:layout_height="wrap_content" />
 
     <TextView
-        android:id="@+id/countdown_text"
+        android:id="@+id/counttime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="10:00"
         android:textSize="25dp" />
-
-    <Button
-        android:id="@+id/countdown_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="start" />
 
 </LinearLayout>

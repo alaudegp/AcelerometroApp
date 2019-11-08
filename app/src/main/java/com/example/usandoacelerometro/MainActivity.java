@@ -24,23 +24,17 @@ import java.util.List;
 
 import static java.lang.Math.abs;
 
-public class MainActivity extends AppCompatActivity implements
-        SensorEventListener {
-
-    ListView listView;
-    String lTitle[] = {"Valor 1", "Valor 2", "Valor 3", "valor 4", "valor 5", "Valor 6", "Valor 7", "Valor 8", "Valor 9", "Valor 10"};
-    int lValor[] = {0};
+public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     private TextView tvValorX;
     private TextView tvValorY;
     private TextView tvValorZ;
     private TextView valorMaior;
-    private TextView countdownText;
-    private Button countdownButton;
+    private TextView counttime;
+
+    private int counter;
 
     float dadoAtual, dadoNovo, dadoMax = 0;
-    private long timeLeftMiliSeconds = 600000;
-    private boolean timeRunnign;
 
     float dadoX, dadoY, dadoZ;
 
@@ -53,7 +47,6 @@ public class MainActivity extends AppCompatActivity implements
 
     private SensorManager mSensorManager;
     private Sensor mAcelerometro;
-    private CountDownTimer countDownTimer;
 
     Acelerometro acelerometro = new Acelerometro();
 
@@ -66,11 +59,24 @@ public class MainActivity extends AppCompatActivity implements
         tvValorY = findViewById(R.id.tvValorY);
         tvValorZ = findViewById(R.id.tvValorZ);
         valorMaior = findViewById(R.id.valorMaior);
+        counttime = findViewById(R.id.counttime);
 
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mAcelerometro = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        countdownText = findViewById(R.id.countdown_text);
+        new CountDownTimer(50000,1000){
+            @Override
+            public void onTick(long millisUntilFinished) {
+                counttime.setText(String.valueOf(counter));
+                counter++;
+            }
+
+            @Override
+            public void onFinish() {
+                counttime.setText("Finished");
+                counter
+            }
+        }.start();
 
     }
 
@@ -110,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements
         dadoZ = abs(mLinearAcceleration[Z]);
 
         acelerometro.setEixoX(dadoX*10);
+        acelerometro.setEixoY(dadoY*10);
 
         // tirar as casas decimais
         String eixoXformtat = formatarFloat.format(acelerometro.getEixoX());
@@ -143,17 +150,10 @@ public class MainActivity extends AppCompatActivity implements
     public void btnVerValor(View view) {
         dadoAtual = acelerometro.getEixoX();
 
-//        for (int i = 0; i < 3; i++){
-            dadoNovo = acelerometro.getEixoX();
-            if (dadoNovo >= dadoMax){
-                dadoMax = dadoNovo;
-                valorMaior.setText(String.valueOf(dadoMax));
-            }
-//        }
-
-//        dadoAnterior = acelerometro.getEixoX();
-//        dadoAtual = acelerometro.getEixoX();
-
+        dadoNovo = acelerometro.getEixoX();
+        if (dadoNovo >= dadoMax) {
+            dadoMax = dadoNovo;
+            valorMaior.setText(String.valueOf(dadoMax));
+        }
     }
-
 }
