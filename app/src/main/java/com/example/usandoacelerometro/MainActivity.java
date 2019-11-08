@@ -34,10 +34,13 @@ public class MainActivity extends AppCompatActivity implements
     private TextView tvValorX;
     private TextView tvValorY;
     private TextView tvValorZ;
+    private TextView valorMaior;
+    private TextView countdownText;
+    private Button countdownButton;
 
-    int[] vet = new int[3];
-
-    private Button btnTimer;
+    float dadoAtual, dadoNovo, dadoMax = 0;
+    private long timeLeftMiliSeconds = 600000;
+    private boolean timeRunnign;
 
     float dadoX, dadoY, dadoZ;
 
@@ -50,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private SensorManager mSensorManager;
     private Sensor mAcelerometro;
+    private CountDownTimer countDownTimer;
 
     Acelerometro acelerometro = new Acelerometro();
 
@@ -61,22 +65,13 @@ public class MainActivity extends AppCompatActivity implements
         tvValorX = findViewById(R.id.tvValorX);
         tvValorY = findViewById(R.id.tvValorY);
         tvValorZ = findViewById(R.id.tvValorZ);
+        valorMaior = findViewById(R.id.valorMaior);
 
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mAcelerometro = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        ListView = findViewById(R.id.listaDeValores);
-    }
+        countdownText = findViewById(R.id.countdown_text);
 
-    class MyAdapter extends ArrayAdapter<String>{
-        Context context;
-        String linhsTitulo[];
-        int linhaValor[];
-
-        MyAdapter (Context c, String titulo[], int valor[]){
-            super(c, R.layout.linha, R.id.txtTitulo, titulo);
-            this.linhsTitulo
-        }
     }
 
     @Override
@@ -126,7 +121,6 @@ public class MainActivity extends AppCompatActivity implements
         tvValorY.setText(String.valueOf(eixoYformtat));
         tvValorZ.setText(String.valueOf(eixoZformtat));
 
-
     }
 
     @Override
@@ -145,4 +139,21 @@ public class MainActivity extends AppCompatActivity implements
         i.putExtra("sensores", lista);
         startActivity(i);
     }
+
+    public void btnVerValor(View view) {
+        dadoAtual = acelerometro.getEixoX();
+
+//        for (int i = 0; i < 3; i++){
+            dadoNovo = acelerometro.getEixoX();
+            if (dadoNovo >= dadoMax){
+                dadoMax = dadoNovo;
+                valorMaior.setText(String.valueOf(dadoMax));
+            }
+//        }
+
+//        dadoAnterior = acelerometro.getEixoX();
+//        dadoAtual = acelerometro.getEixoX();
+
+    }
+
 }
