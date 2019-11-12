@@ -7,12 +7,14 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.CountDownTimer;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,12 +31,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private TextView tvValorX;
     private TextView tvValorY;
     private TextView tvValorZ;
-    private TextView valorMaior;
-    private TextView counttime;
+    private static TextView valorMaior;
 
-    private int counter;
+    private Chronometer chronometer;
+    private long pauseOffset;
+    private boolean runnig;
 
-    float dadoAtual, dadoNovo, dadoMax = 0;
+    static float dadoAtual, dadoNovo, dadoMax = 0;
 
     float dadoX, dadoY, dadoZ;
 
@@ -45,10 +48,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private float[] mGravity = {0.0f, 0.0f, 0.0f};
     private float[] mLinearAcceleration = {0.0f, 0.0f, 0.0f};
 
+    ArrayList<Float> vet = new ArrayList<Float>();
+
     private SensorManager mSensorManager;
     private Sensor mAcelerometro;
 
-    Acelerometro acelerometro = new Acelerometro();
+    static Acelerometro acelerometro = new Acelerometro();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,25 +64,23 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         tvValorY = findViewById(R.id.tvValorY);
         tvValorZ = findViewById(R.id.tvValorZ);
         valorMaior = findViewById(R.id.valorMaior);
-        counttime = findViewById(R.id.counttime);
 
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mAcelerometro = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        new CountDownTimer(50000,1000){
-            @Override
-            public void onTick(long millisUntilFinished) {
-                counttime.setText(String.valueOf(counter));
-                counter++;
-            }
+        chronometer = findViewById(R.id.chronometer);
+        chronometer.setFormat("Time: %s");
+        chronometer.setBase(SystemClock.elapsedRealtime());
 
+        chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
             @Override
-            public void onFinish() {
-                counttime.setText("Finished");
-                counter
+            public void onChronometerTick(Chronometer chronometer) {
+                if ((SystemClock.elapsedRealtime() - chronometer.getBase()) >= 10000) {
+                    chronometer.setBase(SystemClock.elapsedRealtime());
+                    Toast.makeText(MainActivity.this, "Bing!", Toast.LENGTH_SHORT);
+                }
             }
-        }.start();
-
+        });
     }
 
     @Override
@@ -134,20 +137,32 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
-    public void btMeusSensoresOnClick(View v) {
-        List<Sensor> listaSensores = mSensorManager.getSensorList(Sensor.TYPE_ALL);
-        String[] lista = new String[listaSensores.size()];
+    public void startChronometer(View view) {
+        if (!runnig){
+            chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
+            chronometer.start();
+            runnig = true;
 
-        for (int i = 0; i < listaSensores.size(); i++) {
-            lista[i] = listaSensores.get(i).getName();
+
+
+
         }
-
-        Intent i = new Intent(this, ListarActivity.class);
-        i.putExtra("sensores", lista);
-        startActivity(i);
     }
 
-    public void btnVerValor(View view) {
+    public void pauseChronometer(View view) {
+        if (runnig){
+            chronometer.stop();
+            pauseOffset = SystemClock.elapsedRealtime() - chronometer.getBase();
+            runnig = false;
+        }
+    }
+
+    public void resetChronometer(View view) {
+        chronometer.setBase(SystemClock.elapsedRealtime());
+        pauseOffset = 0;
+    }
+
+    public static void calculaMaior (float x, float y){
         dadoAtual = acelerometro.getEixoX();
 
         dadoNovo = acelerometro.getEixoX();
