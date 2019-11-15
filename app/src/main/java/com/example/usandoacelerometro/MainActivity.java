@@ -31,13 +31,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private TextView tvValorX;
     private TextView tvValorY;
     private TextView tvValorZ;
-    private static TextView valorMaior;
+    private TextView valorMaior;
 
     private Chronometer chronometer;
     private long pauseOffset;
     private boolean runnig;
 
-    static float dadoAtual, dadoNovo, dadoMax = 0;
+    private float dadoMax = 0;
 
     float dadoX, dadoY, dadoZ;
 
@@ -45,15 +45,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private static final int Y = 1;
     private static final int Z = 2;
 
+    private float t = 5.0f;
+
     private float[] mGravity = {0.0f, 0.0f, 0.0f};
     private float[] mLinearAcceleration = {0.0f, 0.0f, 0.0f};
-
-    ArrayList<Float> vet = new ArrayList<Float>();
 
     private SensorManager mSensorManager;
     private Sensor mAcelerometro;
 
-    static Acelerometro acelerometro = new Acelerometro();
+    private Acelerometro acelerometro = new Acelerometro();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,9 +64,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         tvValorY = findViewById(R.id.tvValorY);
         tvValorZ = findViewById(R.id.tvValorZ);
         valorMaior = findViewById(R.id.valorMaior);
-
-        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        mAcelerometro = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         chronometer = findViewById(R.id.chronometer);
         chronometer.setFormat("Time: %s");
@@ -84,16 +81,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        mSensorManager.registerListener(this, mAcelerometro,
-                SensorManager.SENSOR_DELAY_UI);
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
-        mSensorManager.unregisterListener(this);
+
     }
 
     @Override
@@ -131,6 +121,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         tvValorY.setText(String.valueOf(eixoYformtat));
         tvValorZ.setText(String.valueOf(eixoZformtat));
 
+        float dadoNovo = acelerometro.getEixoX();
+
+        if (dadoNovo >= dadoMax) {
+            dadoMax = dadoNovo;
+            if (dadoMax > 10.0f && dadoMax < 50.0f) {
+                valorMaior.setText(String.valueOf(dadoMax));
+            }
+        }
     }
 
     @Override
@@ -138,12 +136,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     public void startChronometer(View view) {
+
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        mAcelerometro = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        mSensorManager.registerListener(this, mAcelerometro, SensorManager.SENSOR_DELAY_UI);
+
         if (!runnig){
             chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
             chronometer.start();
             runnig = true;
-
-
 
 
         }
@@ -154,6 +156,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             chronometer.stop();
             pauseOffset = SystemClock.elapsedRealtime() - chronometer.getBase();
             runnig = false;
+
+            mSensorManager.unregisterListener(this);
         }
     }
 
@@ -162,13 +166,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         pauseOffset = 0;
     }
 
-    public static void calculaMaior (float x, float y){
-        dadoAtual = acelerometro.getEixoX();
+    public void calculaMaior (View view){
 
-        dadoNovo = acelerometro.getEixoX();
-        if (dadoNovo >= dadoMax) {
-            dadoMax = dadoNovo;
-            valorMaior.setText(String.valueOf(dadoMax));
+        if (acelerometro.getEixoX() > t) {
+            Toast.makeText(this, "Teste", Toast.LENGTH_SHORT).show();
         }
     }
 }

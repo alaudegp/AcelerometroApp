@@ -38,4 +38,13 @@ public class Acelerometro {
     public void setEixoZ(float eixoZ) {
         this.eixoZ = eixoZ;
     }
+
+    @Override
+    public String toString() {
+        return "Acelerometro{" +
+                "eixoX=" + eixoX +
+                ", eixoY=" + eixoY +
+                ", eixoZ=" + eixoZ +
+                '}';
+    }
 }
