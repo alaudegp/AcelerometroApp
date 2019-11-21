@@ -1,21 +1,15 @@
 package com.example.usandoacelerometro;
 
-import android.content.Context;
-import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.CountDownTimer;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Chronometer;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,8 +22,6 @@ import java.util.List;
 import static java.lang.Math.abs;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
-
-    float vet[] = new float[3];
 
     private TextView tvValorY;
 
@@ -53,8 +45,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private SensorManager mSensorManager;
     private Sensor mAcelerometro;
 
-    private Acelerometro armazena[] = new Acelerometro[5];
-    private Acelerometro acelerometro = new Acelerometro();
+    private List<Acelerometro> acelerometrosList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         tvValorY = findViewById(R.id.tvValorY);
 
         valorMaiorY = findViewById(R.id.valorMaiorY);
+
+        acelerometrosList = new ArrayList<>();
 
         chronometer = findViewById(R.id.chronometer);
         chronometer.setFormat("Time: %s");
@@ -105,28 +98,22 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         // variáveis para recebr os valores do sensores
         dadoY = abs(mLinearAcceleration[Y]);
+        dadoY = dadoY / 4;
+
 
         // tirar as casas decimais
-        String eixoYformtat = formatarFloat.format(acelerometro.getEixoY());
+
 
         // coloca os valores dos sensores dentro das Text
-        tvValorY.setText(String.valueOf(eixoYformtat));
+//        tvValorY.setText(String.valueOf(eixoYformtat));
 
-        acelerometro.setEixoY(dadoY);
+        Acelerometro acelerometro = new Acelerometro();
 
-        float dadoNovoY = acelerometro.getEixoY() / 4;
-
-        for (int i = 0; i < armazena.length; i++) {
-            armazena[i] = acelerometro;
+        if(dadoY > 7){
+            String eixoYformtat = formatarFloat.format(dadoY);
+            acelerometro.setEixoY(Float.parseFloat(eixoYformtat));
+            acelerometrosList.add(acelerometro);
         }
-
-        for (int j = 0; j < vet.length; j++) {
-            if (dadoNovoY > 7) {
-                valorMaiorY.setText(String.valueOf(dadoNovoY));
-                vet[j] = dadoNovoY;
-            }
-        }
-
     }
 
     @Override
@@ -163,6 +150,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     public void calculaMaior(View view) {
-        Log.d("my", "teste" + Arrays.toString(vet));
+        Log.d("my", "teste" + acelerometrosList);
     }
 }
